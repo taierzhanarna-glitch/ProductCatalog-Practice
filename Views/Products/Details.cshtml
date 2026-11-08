@@ -1,0 +1,19 @@
+@model ProductCatalogPractice.Models.Product
+<a class="back-link" asp-action="Index">← КАТАЛОГҚА ҚАЙТУ</a>
+<section class="details-panel">
+    @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+    {
+        <img class="details-art-image" src="@Model.ImageUrl" alt="@Model.Name өнімі" />
+    }
+    else
+    {
+        <div class="details-art" aria-hidden="true"><span>N</span></div>
+    }
+    <div class="details-copy">
+        <p class="eyebrow">@Model.Category.ToUpperInvariant() / N° @Model.Id.ToString("000")</p>
+        <h1>@Model.Name</h1>
+        <p>@Model.Description</p>
+        <strong>@Model.Price.ToString("N0") <small>₸</small></strong>
+        <span class="availability @(Model.IsAvailable ? "in-stock" : "out-stock")">@(Model.IsAvailable ? "● ҚОЙМАДА БАР" : "● ҚАЗІР ЖОҚ")</span>
+    </div>
+</section>

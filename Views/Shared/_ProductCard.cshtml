@@ -1,0 +1,19 @@
+@model ProductCatalogPractice.Models.Product
+<article class="product-card">
+    <a class="product-image" asp-controller="Products" asp-action="Details" asp-route-id="@Model.Id" aria-label="@Model.Name толық мәліметі">
+        @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+        {
+            <img class="product-photo-img" src="@Model.ImageUrl" alt="@Model.Name өнімі" loading="lazy" />
+        }
+        else
+        {
+            <span class="image-glyph" aria-hidden="true">N</span>
+        }
+        <span class="image-mark">N° @Model.Id.ToString("00")</span>
+        <span class="image-open">↗</span>
+    </a>
+    <div class="product-meta"><span>@Model.Category.ToUpperInvariant()</span><span class="availability @(Model.IsAvailable ? "in-stock" : "out-stock")">@(Model.IsAvailable ? "● ҚОЛДА" : "● ЖОҚ")</span></div>
+    <h3><a asp-controller="Products" asp-action="Details" asp-route-id="@Model.Id">@Model.Name</a></h3>
+    <p class="product-description">@Model.Description</p>
+    <div class="product-price">@Model.Price.ToString("N0") <small>₸</small></div>
+</article>

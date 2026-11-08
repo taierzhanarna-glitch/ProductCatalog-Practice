@@ -1,0 +1,48 @@
+@model IReadOnlyList<Product>
+@{
+    var categories = (IReadOnlyList<string>)ViewBag.Categories;
+}
+
+<section class="catalog-hero">
+    <div class="hero-copy">
+        <p class="eyebrow">NORD / OBJECTS</p>
+        <h1>Күнделікті<br /><span>заттар.</span></h1>
+        <p class="hero-description">Қарапайым пішін. Пайдалы техника. Таңдалған топтама.</p>
+        <a class="hero-link" href="#catalog">КАТАЛОГТЫ КӨРУ <span>↓</span></a>
+    </div>
+    <div class="hero-art" aria-hidden="true"><div class="art-ring"></div><div class="art-orb"></div><span>N° 01<br />NORD STUDIO</span></div>
+</section>
+
+<section class="catalog-section" id="catalog">
+    @if (ViewBag.Notice is string notice)
+    {
+        <div class="catalog-notice" role="status">@notice</div>
+    }
+    <div class="section-heading"><div><p class="eyebrow">ТАПСЫРМА / КАТАЛОГ</p><h2>Таңдалған өнімдер</h2></div><div class="heading-actions"><span class="count">@ViewBag.TotalCount ӨНІМ</span><a class="add-product-link" asp-action="Create">+ ӨНІМ ҚОСУ</a></div></div>
+    <form asp-action="Index" method="get" class="filter-bar">
+        <label for="q">Іздеу</label>
+        <input id="q" name="q" value="@ViewBag.SearchTerm" class="form-control search-field" placeholder="Өнім атауы..." />
+        <label for="category">Санат</label>
+        <select id="category" name="category" class="form-select" onchange="this.form.submit()">
+            <option value="">Барлық санат</option>
+            @foreach (var category in categories)
+            {
+                <option value="@category" selected="@(category == (string)ViewBag.SelectedCategory)">@category</option>
+            }
+        </select>
+        <label for="sort">Сұрыптау</label>
+        <select id="sort" name="sort" class="form-select" onchange="this.form.submit()">
+            <option value="featured" selected="@((string)ViewBag.SelectedSort == "featured")">Әдепкі рет</option>
+            <option value="price-asc" selected="@((string)ViewBag.SelectedSort == "price-asc")">Бағасы: арзаннан</option>
+            <option value="price-desc" selected="@((string)ViewBag.SelectedSort == "price-desc")">Бағасы: қымбаттан</option>
+            <option value="name" selected="@((string)ViewBag.SelectedSort == "name")">Атауы: A–Z</option>
+        </select>
+        <button class="filter-button" type="submit">ҚОЛДАНУ</button>
+    </form>
+    <div class="product-grid">
+        @foreach (var product in Model)
+        {
+            <partial name="_ProductCard" model="product" />
+        }
+    </div>
+</section>

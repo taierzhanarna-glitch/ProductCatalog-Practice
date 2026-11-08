@@ -1,0 +1,49 @@
+@model Product
+@{
+    var categories = (IReadOnlyList<string>)ViewBag.Categories;
+}
+<a class="back-link" asp-action="Index">← КАТАЛОГҚА ҚАЙТУ</a>
+<section class="create-panel">
+    <div class="create-heading"><p class="eyebrow">NORD / NEW OBJECT</p><h1>Өнім қосу<span>.</span></h1><p>Өнім ақпаратын толтырып, каталогқа сақтаңыз. Сурет URL-і міндетті емес.</p></div>
+    <form class="create-form" asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-field"><label asp-for="Name"></label><input asp-for="Name" class="form-control" placeholder="Мысалы: Nord Headphones" /><span asp-validation-for="Name" class="text-danger"></span></div>
+        <div class="form-row">
+            <div class="form-field"><label asp-for="Price"></label><div class="input-group"><input asp-for="Price" class="form-control" type="number" min="1" step="1" placeholder="65000" /><span class="input-group-text">₸</span></div><span asp-validation-for="Price" class="text-danger"></span></div>
+            <div class="form-field"><label asp-for="Category"></label><select asp-for="Category" class="form-select"><option value="">Санатты таңдаңыз</option>@foreach (var category in categories){<option value="@category">@category</option>}</select><span asp-validation-for="Category" class="text-danger"></span></div>
+        </div>
+        <div class="form-field"><label asp-for="Description"></label><textarea asp-for="Description" class="form-control" rows="3" placeholder="Өнімге қысқаша сипаттама..."></textarea><span asp-validation-for="Description" class="text-danger"></span></div>
+        <label class="stock-option"><input asp-for="IsAvailable" /><span>Қоймада бар</span></label>
+        <div class="image-todo">
+            <strong>Өнім суреті</strong>
+            <label asp-for="ImageUrl" class="form-label"></label>
+            <input asp-for="ImageUrl" type="url" class="form-control" placeholder="https://example.com/photo.jpg" autocomplete="url" />
+            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+            <small>Суретке тікелей апаратын, HTTPS арқылы ашық URL енгізіңіз.</small>
+            <div class="url-preview" id="urlPreview" hidden><img id="urlPreviewImage" alt="Сілтемедегі өнім суретінің алдын ала көрінісі" /><span>АЛДЫН АЛА КӨРІНІС</span></div>
+        </div>
+        <div class="form-actions"><button type="submit" class="filter-button">ӨНІМДІ САҚТАУ</button><a class="cancel-link" asp-action="Index">БАС ТАРТУ</a></div>
+    </form>
+</section>
+
+@section Scripts {
+    <script>
+        const imageUrlInput = document.getElementById('ImageUrl');
+        const preview = document.getElementById('urlPreview');
+        const previewImage = document.getElementById('urlPreviewImage');
+
+        imageUrlInput?.addEventListener('input', () => {
+            const value = imageUrlInput.value.trim();
+            if (!value) {
+                preview.hidden = true;
+                previewImage.removeAttribute('src');
+                return;
+            }
+
+            previewImage.onload = () => preview.hidden = false;
+            previewImage.onerror = () => preview.hidden = true;
+            previewImage.src = value;
+        });
+    </script>
+}
